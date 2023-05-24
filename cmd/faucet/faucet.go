@@ -550,13 +550,14 @@ func (f *faucet) apiHandler(w http.ResponseWriter, r *http.Request) {
 			err = errors.New("Something funky happened, please open an issue at https://github.com/ethereum/go-ethereum/issues")
 		}
 		if err != nil {
+			log.Warn("Failed to parse url", "err", err)
 			if err = sendError(wsconn, err); err != nil {
 				log.Warn("Failed to send prefix error to client", "err", err)
 				return
 			}
 			continue
 		}
-		log.Info("Faucet request valid", "url", msg.URL, "tier", msg.Tier, "user", username, "address", address)
+		log.Info("Faucet request valid", "url", msg.URL, "tier", msg.Tier, "user", username, "address", address, "symbol", msg.Symbol)
 
 		// Ensure the user didn't request funds too recently
 		f.lock.Lock()
